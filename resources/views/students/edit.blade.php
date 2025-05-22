@@ -6,37 +6,36 @@
     <div class="container">
         <h2 class="mb-4">Edit Student</h2>
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <form action="{{ route('students.update', $student) }}" method="POST" class="card p-4 shadow-sm">
             @csrf
             @method('PUT')
 
             <div class="mb-3">
                 <label for="name" class="form-label">Full Name</label>
-                <input type="text" name="name" class="form-control" value="{{ old('name', $student->name) }}"
-                    required>
+                <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror"
+                    value="{{ old('name', $student->name) }}">
+                @error('name')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="mb-3">
                 <label for="email" class="form-label">Email Address</label>
-                <input type="email" name="email" class="form-control" value="{{ old('email', $student->email) }}"
-                    required>
+                <input type="email" name="email" id="email"
+                    class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $student->email) }}">
+                @error('email')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="mb-3">
                 <label for="date_of_birth" class="form-label">Date of Birth</label>
-                <input type="date" name="date_of_birth" class="form-control"
-                    value="{{ old('date_of_birth', \Carbon\Carbon::parse($student->date_of_birth)->format('Y-m-d')) }}"
-                    required>
+                <input type="date" name="date_of_birth" id="date_of_birth"
+                    class="form-control @error('date_of_birth') is-invalid @enderror"
+                    value="{{ old('date_of_birth', $student->date_of_birth->format('Y-m-d')) }}">
+                @error('date_of_birth')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="d-flex justify-content-between">
