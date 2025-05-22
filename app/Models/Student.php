@@ -23,4 +23,11 @@ class Student extends Model
     {
         return $this->hasMany(Grade::class);
     }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'grades')
+            ->withPivot('partial_grade', 'final_grade')
+            ->withTimestamps();
+    }
 }

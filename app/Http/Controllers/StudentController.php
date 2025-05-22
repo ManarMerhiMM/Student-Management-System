@@ -8,12 +8,28 @@ use App\Models\Student;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Show all students
-        $students = Student::all();
+        $query = Student::query();
+
+        if ($request->has('search') && $request->search !== null) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $students = $query->orderBy('id', 'asc')->get();
+
         return view('students.index', compact('students'));
     }
+
+    public function show(Student $student)
+    {
+        // Load courses with grades for this student
+        $student->load('courses');
+
+        return view('students.show', compact('student'));
+    }
+
+
 
     public function create()
     {

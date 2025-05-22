@@ -18,6 +18,14 @@
         @if ($students->isEmpty())
             <p>No students found.</p>
         @else
+            <form method="GET" action="{{ route('students.index') }}" class="mb-4 d-flex">
+                <input type="text" name="search" class="form-control me-2" placeholder="Search by name"
+                    value="{{ request('search') }}">
+                <button type="submit" class="btn btn-outline-secondary">
+                    <i class="bi bi-search"></i> Search
+                </button>
+            </form>
+
             <table class="table table-striped table-hover align-middle">
                 <thead class="table-primary">
                     <tr>
@@ -34,9 +42,13 @@
                             <td>{{ $student->id }}</td>
                             <td>{{ $student->name }}</td>
                             <td>{{ $student->email }}</td>
-                            <td>{{ $student->date_of_birth->format('d-m-y') }}</td>
+                            <td>{{ $student->date_of_birth->format('d-m-Y') }}</td>
                             <td>
-                                <a href="{{ route('students.edit', $student) }}" class="btn btn-sm btn-warning">
+                                <a href="{{ route('students.show', $student) }}" class="btn btn-sm btn-info me-1">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+
+                                <a href="{{ route('students.edit', $student) }}" class="btn btn-sm btn-warning me-1">
                                     <i class="bi bi-pencil"></i> Edit
                                 </a>
 
@@ -49,6 +61,7 @@
                                     </button>
                                 </form>
                             </td>
+
                         </tr>
                     @endforeach
                 </tbody>
