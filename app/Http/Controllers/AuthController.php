@@ -40,6 +40,15 @@ class AuthController extends Controller
 
         // Attempt to authenticate the user
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            if ($user->is_deactivated) {
+                Auth::logout();
+                return back()->withInput()->withErrors([
+                    'email' => 'Your account has been deactivated :/',
+                ]);
+            }
+
             $request->session()->regenerate(); // Prevent session fixation
             return redirect()->intended('/dashboard'); // Or home page after login
         }
@@ -50,6 +59,7 @@ class AuthController extends Controller
             'password' => 'Incorrect email/password',
         ]);
     }
+
 
 
     public function register(Request $request)
@@ -71,5 +81,54 @@ class AuthController extends Controller
         ]);
 
         return redirect()->route('login');
+    }
+
+    public function index(Request $request)
+    {
+        if (!Auth::user()->is_admin) {
+            abort(403, 'Unauthorized');
+        }
+
+        $query = User::where('is_admin', false);
+
+        if ($request->has('search') && $request->search !== null) {
+            $query->where('username', 'like', '%' . $request->search . '%');
+        }
+
+        $users = $query->orderBy('id', 'asc')->get();
+
+        return view('users.index', compact('users'));
+    }
+
+
+    public function deactivateUser(User $user)
+    {
+        // Only allow admins
+        if (!Auth::user()->is_admin) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Prevent deactivating admin users (optional)
+        if ($user->is_admin) {
+            return redirect()->back()->with('error', 'Cannot deactivate admin users.');
+        }
+
+        $user->is_deactivated = true;
+        $user->save();
+
+        return redirect()->back()->with('success', 'User deactivated successfully.');
+    }
+
+    // Activate user
+    public function activateUser(User $user)
+    {
+        if (!Auth::user()->is_admin) {
+            abort(403, 'Unauthorized');
+        }
+
+        $user->is_deactivated = false;
+        $user->save();
+
+        return redirect()->back()->with('success', 'User activated successfully.');
     }
 }

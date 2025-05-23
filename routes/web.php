@@ -35,3 +35,9 @@ Route::post('/courses/{course}/enroll', [CourseController::class, 'enrollStudent
 Route::delete('/courses/{course}/students/{student}/unenroll', [CourseController::class, 'unenrollStudent'])->name('courses.unenrollStudent')->middleware(['auth']);
 
 Route::post('/courses/{course}/update-grades-bulk', [CourseController::class, 'updateGrades'])->name('courses.updateGradesBulk')->middleware(['auth']);
+
+Route::get('/users', [AuthController::class, 'index'])->name('users.index')->middleware(['auth']);
+
+Route::post('/users/{user}/deactivate', [AuthController::class, 'deactivateUser'])->name('users.deactivate')->middleware(['auth']);
+
+Route::post('/users/{user}/activate', [AuthController::class, 'activateUser'])->name('users.activate')->middleware(['auth']);
