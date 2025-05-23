@@ -18,7 +18,7 @@
 
         @if (!$student->courses->isEmpty())
             <form action="{{ route('students.exportPdf', $student) }}" method="GET" class="mb-3">
-                <button type="submit" class="btn btn-primary">Export Grades as PDF</button>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-download me-1"></i> Download PDF</button>
             </form>
         @endif
 
