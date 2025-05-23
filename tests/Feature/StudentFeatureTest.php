@@ -67,8 +67,12 @@ class StudentFeatureTest extends TestCase
             ->assertSee($student->name);
 
         // Update
-        $this->put(route('students.update', $student->id), ['name' => 'Alice B'])
-            ->assertRedirect(route('students.index'));
+        $this->put(route('students.update', $student->id), [
+            'name' => 'Alice B',
+            'email' => $student->email,               // keep existing email to pass validation
+            'date_of_birth' => $student->date_of_birth, // keep existing DOB to pass validation
+        ])->assertRedirect(route('students.index'));
+
         $this->assertEquals('Alice B', $student->fresh()->name);
 
         // Delete

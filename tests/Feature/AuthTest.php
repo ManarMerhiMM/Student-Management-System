@@ -85,16 +85,23 @@ class AuthTest extends TestCase
         $admin = User::factory()->create(['is_admin' => true]);
         $user  = User::factory()->create(['is_admin' => false]);
 
+        // Deactivate user
         $this->actingAs($admin)
             ->post(route('users.deactivate', ['user' => $user->id]))
             ->assertRedirect();
 
-        $this->assertTrue($user->fresh()->is_deactivated);
+        // Refresh user from DB immediately after action
+        $user->refresh();
 
+        $this->assertTrue($user->is_deactivated);
+
+        // Activate user
         $this->actingAs($admin)
             ->post(route('users.activate', ['user' => $user->id]))
             ->assertRedirect();
 
-        $this->assertFalse($user->fresh()->is_deactivated);
+        $user->refresh();
+
+        $this->assertFalse($user->is_deactivated);
     }
 }
