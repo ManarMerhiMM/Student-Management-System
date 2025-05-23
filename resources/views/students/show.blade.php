@@ -16,6 +16,12 @@
 
         <h3 class="mb-3">Courses & Grades</h3>
 
+        @if (!$student->courses->isEmpty())
+            <form action="{{ route('students.exportPdf', $student) }}" method="GET" class="mb-3">
+                <button type="submit" class="btn btn-primary">Export Grades as PDF</button>
+            </form>
+        @endif
+
         @if ($student->courses->isEmpty())
             <p>This student is not enrolled in any courses.</p>
         @else

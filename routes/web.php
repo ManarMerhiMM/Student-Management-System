@@ -41,3 +41,5 @@ Route::get('/users', [AuthController::class, 'index'])->name('users.index')->mid
 Route::post('/users/{user}/deactivate', [AuthController::class, 'deactivateUser'])->name('users.deactivate')->middleware(['auth']);
 
 Route::post('/users/{user}/activate', [AuthController::class, 'activateUser'])->name('users.activate')->middleware(['auth']);
+
+Route::get('/students/{student}/export-pdf', [StudentController::class, 'exportPdf'])->name('students.exportPdf')->middleware(['auth']);

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Student;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class StudentController extends Controller
 {
@@ -77,5 +79,14 @@ class StudentController extends Controller
         $student->delete();
 
         return redirect()->route('students.index')->with('success', 'Student deleted successfully.');
+    }
+
+    public function exportPdf(Student $student)
+    {
+        // Load a view with the data in the PDF
+        $pdf = PDF::loadView('students.grades-pdf', compact('student'));
+
+        // Return the PDF as a download
+        return $pdf->download($student->name . '_grades.pdf');
     }
 }
